@@ -32,18 +32,18 @@ func TestBoardCircularWrapping(t *testing.T) {
 		expectedName string
 		expectedID   types.ID
 	}{
-		{0, "Start", 1},
-		{40, "Start", 1},
-		{80, "Start", 1},
-		{-40, "Start", 1},
-		{1, "Old Harbor Road", 2},
-		{41, "Old Harbor Road", 2},
-		{39, "Celestial Heights", 40},
-		{79, "Celestial Heights", 40},
-		{-1, "Celestial Heights", 40},
-		{-41, "Celestial Heights", 40},
-		{5, "Metro Central Station", 6},
-		{45, "Metro Central Station", 6},
+		{0, "Start", 0},
+		{40, "Start", 0},
+		{80, "Start", 0},
+		{-40, "Start", 0},
+		{1, "Old Harbor Road", 1},
+		{41, "Old Harbor Road", 1},
+		{39, "Celestial Heights", 39},
+		{79, "Celestial Heights", 39},
+		{-1, "Celestial Heights", 39},
+		{-41, "Celestial Heights", 39},
+		{5, "Metro Central Station", 5},
+		{45, "Metro Central Station", 5},
 	}
 
 	for _, tc := range tests {
@@ -73,17 +73,17 @@ func TestBoardFlyweightIdentity(t *testing.T) {
 		t.Errorf("expected t1 and t3 to have identical pointer address, got %p and %p", t1, t3)
 	}
 
-	byID, err := TileByID(2)
+	byID, err := TileByID(1)
 	if err != nil {
-		t.Fatalf("unexpected error looking up ID 2: %v", err)
+		t.Fatalf("unexpected error looking up ID 1: %v", err)
 	}
 	if byID != t1 {
-		t.Errorf("expected TileByID(2) to return identical instance as TileAt(1)")
+		t.Errorf("expected TileByID(1) to return identical instance as TileAt(1)")
 	}
 }
 
 func TestBoardTileByID(t *testing.T) {
-	for id := types.ID(1); id <= 40; id++ {
+	for id := types.ID(0); id < BoardTileCount; id++ {
 		tileRef, err := TileByID(id)
 		if err != nil {
 			t.Fatalf("TileByID(%d) returned unexpected error: %v", id, err)
@@ -94,7 +94,7 @@ func TestBoardTileByID(t *testing.T) {
 	}
 
 	// Invalid IDs
-	invalidIDs := []types.ID{0, 41, 100}
+	invalidIDs := []types.ID{40, 41, 100}
 	for _, id := range invalidIDs {
 		_, err := TileByID(id)
 		if err == nil {
