@@ -43,7 +43,12 @@ func (n *BuildHouseDecisionNode) Execute(g *state.Game) error {
 		}
 	}
 
-	// 3. Even Building Rule Check
+	// 3. Capacity Check
+	if targetPH.ExtraInfo.Hotel {
+		return ErrMaxHousesReached
+	}
+
+	// 4. Even Building Rule Check
 	// Effective level: 0-4 houses, 5 for hotel
 	effectiveLevel := func(ph *state.PropertyHolder) int {
 		if ph.ExtraInfo.Hotel {
@@ -66,10 +71,7 @@ func (n *BuildHouseDecisionNode) Execute(g *state.Game) error {
 		return ErrEvenBuildingRule
 	}
 
-	// 4. Capacity & Cost Deduction
-	if targetPH.ExtraInfo.Hotel {
-		return ErrMaxHousesReached
-	}
+	// 5. Cost Deduction & Build
 
 	if targetPH.ExtraInfo.Houses == 4 {
 		// Upgrading 4 houses to 1 Hotel
