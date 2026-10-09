@@ -36,6 +36,13 @@ Welcome to the technical and domain documentation for the **LandGrab** board gam
    - Inbound client actions and outbound server broadcast JSON message schemas.
    - Inactivity timeouts (45s) and player disconnection/reconnection policies.
 
+5. [**Frontend Integration Guide & Component Blueprints (`frontend.md`)**](./frontend.md)
+   - Client-side lifecycle state machine (Lobby $\to$ Matchmaking $\to$ GameBoard $\to$ GameOver).
+   - Step-by-step TypeScript integration examples for connection, queue, actions, and state synchronization.
+   - Reconnection logic via `sessionStorage` and `?reconnect_id=...`.
+   - UI component hierarchy blueprint (Board, Tiles, ActionPanel, TurnTimer, Modals).
+   - 40-tile circular board indexing map (0..39) for 11x11 square CSS grid layout.
+
 ---
 
 ## Package Architecture (Unidirectional DAG)
