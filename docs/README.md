@@ -29,6 +29,13 @@ Welcome to the technical and domain documentation for the **LandGrab** board gam
      - **Mortgage Restriction**: Cannot mortgage a property while buildings exist in the color group.
      - **Demortgage Fee**: 10% interest charged when redeeming a mortgaged property.
 
+4. [**Networking & WebSocket API Reference (`api.md`)**](./api.md)
+   - Complete technical specification for the LandGrab WebSocket and HTTP gateway.
+   - Endpoint reference: `/ws`, `/health`, `/status`, and `/games/{id}`.
+   - Matchmaking queue mechanics (30s interval, exact 4-player grouping).
+   - Inbound client actions and outbound server broadcast JSON message schemas.
+   - Inactivity timeouts (45s) and player disconnection/reconnection policies.
+
 ---
 
 ## Package Architecture (Unidirectional DAG)

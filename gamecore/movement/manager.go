@@ -9,6 +9,14 @@ type MoveManager struct {
 	chain pipeline.MoveNode
 }
 
+// DefaultMoveManager is the shared, stateless flyweight MoveManager instance using DefaultDiceRoller.
+var DefaultMoveManager = NewMoveManager(DefaultDiceRoller)
+
+// Execute executes the movement chain on the given game using the default flyweight manager.
+func Execute(g *state.Game) error {
+	return DefaultMoveManager.Execute(g)
+}
+
 // NewMoveManager constructs the linear movement chain. An optional roller can be provided for deterministic tests.
 func NewMoveManager(roller DiceRoller) *MoveManager {
 	diceNode := NewDiceRollNode(roller)

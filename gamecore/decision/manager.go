@@ -6,8 +6,20 @@ import (
 )
 
 type DecisionManager struct {
-	chain     pipeline.DecisionNode
-	tradeNode *TradeDecisionNode
+	chain pipeline.DecisionNode
+}
+
+// DefaultDecisionManager is the shared, stateless flyweight DecisionManager instance.
+var DefaultDecisionManager = NewDecisionManager()
+
+// Execute executes the decision chain on the given game using the default flyweight manager.
+func Execute(g *state.Game) error {
+	return DefaultDecisionManager.Execute(g)
+}
+
+// ExecuteTrade executes a trade decision on the given game using the default flyweight manager.
+func ExecuteTrade(g *state.Game, trade *TradeOffer) error {
+	return DefaultDecisionManager.ExecuteTrade(g, trade)
 }
 
 // NewDecisionManager constructs and links the linear decision processing chain.
@@ -35,8 +47,7 @@ func NewDecisionManager() *DecisionManager {
 	)
 
 	return &DecisionManager{
-		chain:     chain,
-		tradeNode: tradeNode,
+		chain: chain,
 	}
 }
 
@@ -49,6 +60,6 @@ func (m *DecisionManager) Execute(g *state.Game) error {
 
 func (m *DecisionManager) ExecuteTrade(g *state.Game, trade *TradeOffer) error {
 	g.PendingDecision = state.DecisionTrade
-	m.tradeNode.PendingTrade = trade
+	g.PendingTrade = trade
 	return m.Execute(g)
 }

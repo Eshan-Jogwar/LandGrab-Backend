@@ -5,12 +5,20 @@ import (
 	"github.com/LandGrab/gamecore/types"
 )
 
+type TradeOffer struct {
+	FromPlayerID types.ID
+	ToPlayerID   types.ID
+	TileID       types.ID
+	Cash         types.Money
+}
+
 type Game struct {
 	Players            []*Player
 	CurrentPlayerIdx   int
 	Phase              GamePhase
 	PendingDecision    DecisionType
 	DecisionTargetTile types.ID
+	PendingTrade       *TradeOffer
 
 	// TileOwnerIndex maps tile ID [0..39] to Owner Player ID or NoOwnerID.
 	TileOwnerIndex [tile.BoardTileCount]types.ID
@@ -77,4 +85,5 @@ func (g *Game) AdvanceTurn() {
 	g.CanRollAgain = false
 	g.PendingDecision = DecisionNone
 	g.DecisionTargetTile = 0
+	g.PendingTrade = nil
 }
