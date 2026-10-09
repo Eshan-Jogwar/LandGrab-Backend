@@ -8,3 +8,8 @@
 # Test binary, output & coverage
 *.test
 *.out
+
+# Frontend test directory (excluded from git)
+frontend/
+node_modules/
+dist/

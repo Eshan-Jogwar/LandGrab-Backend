@@ -146,21 +146,33 @@ func (np *NetPlayer) WritePump() {
 	for {
 		select {
 		case message, ok := <-np.Send:
-			_ = np.Conn.SetWriteDeadline(time.Now().Add(writeWait))
-			if !ok {
-				// Buffer closed by server
-				_ = np.Conn.WriteMessage(websocket.CloseMessage, []byte{})
+			np.mu.Lock()
+			if !np.IsConnected {
+				np.mu.Unlock()
 				return
 			}
-
+			_ = np.Conn.SetWriteDeadline(time.Now().Add(writeWait))
+			if !ok {
+				_ = np.Conn.WriteMessage(websocket.CloseMessage, []byte{})
+				np.mu.Unlock()
+				return
+			}
 			err := np.Conn.WriteMessage(websocket.TextMessage, message)
+			np.mu.Unlock()
 			if err != nil {
 				return
 			}
 
 		case <-ticker.C:
+			np.mu.Lock()
+			if !np.IsConnected {
+				np.mu.Unlock()
+				return
+			}
 			_ = np.Conn.SetWriteDeadline(time.Now().Add(writeWait))
-			if err := np.Conn.WriteMessage(websocket.PingMessage, nil); err != nil {
+			err := np.Conn.WriteMessage(websocket.PingMessage, nil)
+			np.mu.Unlock()
+			if err != nil {
 				return
 			}
 		}

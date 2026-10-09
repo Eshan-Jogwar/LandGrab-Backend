@@ -117,8 +117,12 @@ func (s *Server) handleWebSocket(w http.ResponseWriter, r *http.Request) {
 		if game, ok := s.sessions.GetGame(gameID); ok {
 			if existingPlayer, ok := game.TempIDIndex[reconnectID]; ok {
 				existingPlayer.mu.Lock()
+				if existingPlayer.Conn != nil {
+					_ = existingPlayer.Conn.Close()
+				}
 				existingPlayer.Conn = conn
 				existingPlayer.IsConnected = true
+				existingPlayer.Send = make(chan []byte, 256)
 				existingPlayer.mu.Unlock()
 
 				go existingPlayer.WritePump()
